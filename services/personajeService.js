@@ -9,6 +9,27 @@ export const getAll = async () => {
     return results;
 }
 
+export const getByName = async (nombre) => {
+    const conn = await sql.connect(configDB)
+    const results = await conn.request().input("whereCondition", nombre).query('SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Nombre LIKE @whereCondition')
+    console.log(results)
+    return results;
+}
+
+export const getByAge = async (año) => {
+    const conn = await sql.connect(configDB)
+    const results = await conn.request().input("whereCondition", año).query('SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.FechaCreacion LIKE @whereCondition')
+    console.log(results)
+    return results;
+}
+
+export const getByIdMovie= async (id) => {
+    const conn = await sql.connect(configDB)
+    const results = await conn.request().input("whereCondition", id).query('SELECT Id, Imagen, Nombre FROM Personaje INNER JOIN PersonajeXPeliculaSerie ON Personaje.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.PeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie LIKE @whereCondition')
+    console.log(results)
+    return results;
+}
+
 export const getByID = async (numero) => {
     const conn = await sql.connect(configDB);
     const results = await conn.request().input("whereCondition", numero).query('SELECT * FROM Personaje INNER JOIN PersonajeXPeliculaSerie ON Personaje.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.PeliculaSerie = PeliculaSerie.Id WHERE Personaje.Id LIKE @whereCondition');
