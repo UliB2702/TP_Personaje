@@ -16,16 +16,16 @@ export const getByName = async (nombre) => {
     return results;
 }
 
-export const getByAge = async (año) => {
+export const getByAge = async (edad) => {
     const conn = await sql.connect(configDB)
-    const results = await conn.request().input("whereCondition", año).query('SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.FechaCreacion LIKE @whereCondition')
+    const results = await conn.request().input("whereCondition", edad).query('SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Edad LIKE @whereCondition')
     console.log(results)
     return results;
 }
 
 export const getByIdMovie= async (id) => {
     const conn = await sql.connect(configDB)
-    const results = await conn.request().input("whereCondition", id).query('SELECT Id, Imagen, Nombre FROM Personaje INNER JOIN PersonajeXPeliculaSerie ON Personaje.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.PeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie LIKE @whereCondition')
+    const results = await conn.request().input("whereCondition", id).query('SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON Personaje.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.PeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie LIKE @whereCondition')
     console.log(results)
     return results;
 }
@@ -69,3 +69,4 @@ export const update = async (id, personaje) =>{
     console.log(results)
     return results;
 }
+

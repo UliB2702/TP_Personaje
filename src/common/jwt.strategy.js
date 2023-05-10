@@ -10,7 +10,7 @@ const opt = {
     algorithms: ["HS256"],
 };
 
-const jwtStrategy = new Strategy(opt, (jwt_payload, done) => {
+export const jwtStrategy = new Strategy(opt, (jwt_payload, done) => {
     if (!jwt_payload){
         done(true);
     } else{
@@ -28,3 +28,4 @@ export const Authenticate = (req, res, next) => {
         }
     })(req, res, next);
 };
+ 

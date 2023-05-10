@@ -1,19 +1,29 @@
 import express, { Router } from "express";
 import jwt from "jsonwebtoken";
-import cors from "cors";
-import PersonajeRouter from "./src/controllers/personajeController";
-import PeliculaSerieRouter from "./src/controllers/peliculaSerieController";
+import PersonajeRouter from "./controllers/personajesController.js";
+import PeliculaSerieRouter from "./controllers/peliculaSerieController.js";
 import 'dotenv/config';
 import passport from "passport";
+import { jwtStrategy } from "./common/jwt.strategy.js";
 
 const app = express();
 const port = 5000;
 passport.use(jwtStrategy);
 app.use(passport.initialize());
 
-app.use(cors());
 app.use(express.json());
 
+const getRandomString = () => {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < 18; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+  
+    return result;
+  };
 
 const getSignedToken = () => {
     const userId = getRandomString();
@@ -23,7 +33,7 @@ const getSignedToken = () => {
             payload: "PersoMovie",
             userEmail: userMail,
         },
-        process.env.AUTH0_HS256_KEY,
+        process.env.AUTH_HS256_KEY,
         {
             issuer: "hhtp://personaje.ort/",
             subject: userId,
