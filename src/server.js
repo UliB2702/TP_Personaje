@@ -35,7 +35,7 @@ const getSignedToken = () => {
         },
         process.env.AUTH_HS256_KEY,
         {
-            issuer: "hhtp://personaje.ort/",
+            issuer: process.env.AUTH_ISSUER_URL,
             subject: userId,
             audience: ["http://localhost/"],
             expiresIn: 60 * 60 * 24 * 5

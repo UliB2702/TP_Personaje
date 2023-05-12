@@ -1,24 +1,18 @@
 import { Router } from 'express';
 import { Authenticate } from '../common/jwt.strategy.js';
-import { getByAge, getByIdMovie } from '../services/personajeService.js';
+import { getByParams, getByID } from '../services/personajeService.js';
 const controller = Router()
 
 controller.get('/auth/login', async (req, res) => {
 
 });
 controller.get('', Authenticate, async (req, res) => {
-    if(req.query.name)
-    {
-        const personajes = await getByName(req.query.name);
-    }
-    if(req.query.age)
-    {
-        const personajes = await getByAge(req.query.age);
-    }
-    if(req.query.movies)
-    {
-        const personajes = await getByIdMovie(req.query.movies);
-    }
+    const name = req.query.name
+    const age = req.query.age
+    const movies = req.query.movie
+
+    const personajes = await getByParams(name,age,movies)
+
     return res.status(200).json(personajes);
 });
 
