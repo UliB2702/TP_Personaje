@@ -1,11 +1,17 @@
+import Personaje from "../models/Personaje.js";
 import { Router } from 'express';
 import { Authenticate } from '../common/jwt.strategy.js';
-import { getByParams, getByID } from '../services/personajeService.js';
+import { getByParams, getByID, getAll, create, deleteByID, update } from '../services/personajeService.js';
 const controller = Router()
 
 controller.get('/auth/login', async (req, res) => {
 
 });
+controller.get('', Authenticate, async (req, res) => {
+    const personajes = await getAll();
+    return res.status(200).json(personajes);
+});
+
 controller.get('', Authenticate, async (req, res) => {
     const name = req.query.name
     const age = req.query.age
@@ -35,9 +41,8 @@ controller.post('/api/', Authenticate, async (req, res)=> {
 
 controller.delete('/api/', Authenticate, async (req, res) => {
     const id = req.body.id
-    const Personaje = await getByID(id);
     await deleteByID(id);
-    return res.status(200).json(Personaje)
+    return res.status(200).json()
 })
 
 controller.put('/api/', Authenticate, async (req, res) => {
