@@ -24,6 +24,7 @@ controller.get('', Authenticate, async (req, res) => {
 });
 
 controller.get('/:id', Authenticate, async (req, res) => {
+    console.log(req.params.id)
     const peliculaSerie = await getByID(req.params.id);
     return res.status(200).json(peliculaSerie)
 })
@@ -40,8 +41,9 @@ controller.post('/api/', Authenticate, async (req, res)=> {
 })
 
 controller.delete('/api/', Authenticate, async (req, res) => {
+    let peliculaSerie2 = new PeliculaSerie()
     const id = req.body.id
-    const PeliculaSerie = await getByID(id);
+    peliculaSerie2 = await getByID(id);
     await deleteByID(id);
     return res.status(200).json(PeliculaSerie)
 })

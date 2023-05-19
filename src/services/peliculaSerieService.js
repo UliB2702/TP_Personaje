@@ -33,13 +33,21 @@ export const getByParams = async (nombre, orden) =>{
 
 export const getByID = async (numero) => {
     const conn = await sql.connect(configDB);
-    const results = await conn.request().input("whereCondition", numero).query('SELECT * FROM PeliculaSerie INNER JOIN PersonajeXPeliculaSerie ON PeliculaSerie.Id = PersonajeXPeliculaSerie.IdPeliculaSerie INNER JOIN Personaje ON PersonajeXPeliculaSerie.IdPersonaje = Personaje.Id WHERE PeliculaSerie.Id LIKE @whereCondition');
+    const results = await conn.request().input("whereCondition", numero).query('SELECT * FROM PeliculaSerie INNER JOIN PersonajeXPeliculaSerie ON PeliculaSerie.Id = PersonajeXPeliculaSerie.IdPeliculaSerie INNER JOIN Personaje ON PersonajeXPeliculaSerie.IdPersonaje = Personaje.Id WHERE PeliculaSerie.Id = @whereCondition');
     console.log(results)
     return results
 }
 
 export const create = async (peliculaSerie) =>{
     const conn = await sql.connect(configDB);
+    if(peliculaSerie.calificacion>5)
+    {
+        peliculaSerie.calificacion = 5;
+    }
+    else if(peliculaSerie.calificacion<1)
+    {
+        peliculaSerie.calificacion = 1;
+    }
     await conn.request()
     .input("pTitulo", peliculaSerie.titulo)
     .input("pImagen", peliculaSerie.imagen)
