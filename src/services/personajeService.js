@@ -12,36 +12,50 @@ export const getAll = async () => {
 export const getByParams = async (nombre,edad,movie) => {
     const conn = await sql.connect(configDB)
     let results = 0
-    if(edad==undefined && movie==undefined)
+    if(nombre)
     {
-        results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Nombre LIKE '%${nombre}%'`)
+        if(edad)
+        {
+            if(movie)
+            {
+                results = await conn.request().input("whereCondition", nombre).input("whereCondition2", edad).input("whereCondition3", movie).query(`SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON p.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE p.Nombre LIKE '%${nombre}%' AND PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition3 AND p.Edad = @whereCondition2`)
+            }
+            else{
+                results = await conn.request().input("whereCondition", nombre).input("whereCondition2", edad).query(`SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Nombre LIKE '%${nombre}%' AND Personaje.Edad = @whereCondition2`)
+            }
+        }
+        else{
+            if(movie)
+            {
+                results = await conn.request().input("whereCondition", nombre).input("whereCondition2", movie).query(`SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON Personaje.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition2 AND Personaje.Nombre LIKE '%${nombre}%'`)
+
+            }
+            else{
+                results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Nombre LIKE '%${nombre}%'`)
+
+            }
+        }
     }
-    else if(nombre==undefined && movie==undefined){
-        results = await conn.request().input("whereCondition", edad).query('SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Edad = @whereCondition')
+    else if(edad){
+        if(movie)
+        {
+            results = await conn.request().input("whereCondition", edad).input("whereCondition2", movie).query('SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON p.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition2 AND p.Edad = @whereCondition')
+
+        }
+        else
+        {
+            results = await conn.request().input("whereCondition", edad).query('SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Edad = @whereCondition')
+        }
     }
-    else if(nombre==undefined && edad==undefined)
+    else if(movie)
     {
         results = await conn.request().input("whereCondition", movie).query("SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON p.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition")
     }
-    else if(movie==undefined)
+    else
     {
-        results = await conn.request().input("whereCondition", nombre).input("whereCondition2", edad).query(`SELECT Id, Imagen, Nombre FROM Personaje WHERE Personaje.Nombre LIKE '%${nombre}%' AND Personaje.Edad = @whereCondition2`)
+        results = await conn.request().query('SELECT Id, Imagen, Nombre FROM Personaje')
     }
-    else if(edad==undefined)
-    {
-        results = await conn.request().input("whereCondition", nombre).input("whereCondition2", movie).query(`SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON Personaje.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition2 AND Personaje.Nombre LIKE '%${nombre}%'`)
-    }
-    else if(nombre==undefined)
-    {
-        results = await conn.request().input("whereCondition", edad).input("whereCondition2", movie).query('SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON p.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition2 AND p.Edad = @whereCondition')
-    }
-    else if(nombre==undefined && edad==undefined && movie==undefined)
-    {
-        results = await conn.request().query('SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p')
-    }
-    else{
-        results = await conn.request().input("whereCondition", nombre).input("whereCondition2", edad).input("whereCondition3", movie).query(`SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON p.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE p.Nombre LIKE '%${nombre}%' AND PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition3 AND p.Edad = @whereCondition2`)
-    }
+
     console.log(results)
     return results;
 }

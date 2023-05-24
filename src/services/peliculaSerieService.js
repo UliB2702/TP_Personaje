@@ -16,7 +16,7 @@ export const getByParams = async (nombre, orden) =>{
     {
         results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%'`)
     }
-    else(nombre == undefined)
+    else if(nombre == undefined)
     {
         if(orden == "ASC")
         {
@@ -26,7 +26,31 @@ export const getByParams = async (nombre, orden) =>{
         {
             results = await conn.request().query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie ORDER BY FechaCreacion DESC`)
         }
+        else{
+            results = await conn.request().query('SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie')
+        }
     }
+    else if(nombre != undefined){
+
+        if(orden == "ASC")
+        {
+            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%' ORDER BY FechaCreacion ASC`)
+        }
+        else if(orden == "DESC")
+        {
+            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%' ORDER BY FechaCreacion DESC`)
+        }
+        else
+        {
+            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%'`)
+        }        
+
+    }
+    else if(orden != "ASC" && orden != "DESC" && nombre == undefined)
+    {
+        results = await conn.request().query('SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie')
+    }
+    
     console.log(results)
     return results;
 }
@@ -53,7 +77,7 @@ export const create = async (peliculaSerie) =>{
     .input("pImagen", peliculaSerie.imagen)
     .input("pFechaCreacion", peliculaSerie.fechaCreacion)
     .input("pCalificacion", peliculaSerie.calificacion)
-    .query('INSERT INTO PeliculaSerie (Imagen, Titulo, FechaCreacion, Calificacion) VALUES (@pImagen, @pTitulo, @pFechaCreacion, @Calificacion)');
+    .query('INSERT INTO PeliculaSerie (Imagen, Titulo, FechaCreacion, Calificacion) VALUES (@pImagen, @pTitulo, @pFechaCreacion, @pCalificacion)');
 
 }
 
@@ -70,5 +94,5 @@ export const update = async (id, peliculaSerie) =>{
     .input("pImagen", peliculaSerie.imagen)
     .input("pFechaCreacion", peliculaSerie.fechaCreacion)
     .input("pCalificacion", peliculaSerie.calificacion)
-    .query('UPDATE Personaje SET @pImagen = Imagen, Titulo = @pTitulo, FechaCreacion = @pFechaCreacion, Calificacion = @pCalificacion WHERE PeliculaSerie.Id LIKE @whereCondition');
+    .query('UPDATE PeliculaSerie SET Imagen = @pImagen, Titulo = @pTitulo, FechaCreacion = @pFechaCreacion, Calificacion = @pCalificacion WHERE PeliculaSerie.Id LIKE @whereCondition');
 }

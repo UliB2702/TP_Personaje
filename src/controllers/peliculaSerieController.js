@@ -8,20 +8,22 @@ const controller = Router()
 controller.get('/auth/login', async (req, res) => {
     
 });
+//Cuando funcione el otro, borrar este
+/*
+    controller.get('', Authenticate, async (req, res) => {
+    const peliculaSeries = await getAll();
+    return res.status(200).json(peliculaSeries);
+});*/
 
-controller.get('', Authenticate, async (req, res) => {
+ controller.get('', Authenticate, async (req, res) => {
     const name = req.query.name
     const order = req.query.order
 
     const peliculaSerie = await getByParams(name,order)
 
     return res.status(200).json(peliculaSerie);
-});
+}); 
 
-controller.get('', Authenticate, async (req, res) => {
-    const peliculaSerie = await getAll();
-    return res.status(200).json(peliculaSerie);
-});
 
 controller.get('/:id', Authenticate, async (req, res) => {
     console.log(req.params.id)
@@ -55,7 +57,7 @@ controller.put('/api/', Authenticate, async (req, res) => {
     peliculaSerie2.titulo = req.body.titulo
     peliculaSerie2.fechaCreacion = req.body.fechaCreacion
     peliculaSerie2.calificacion = req.body.calificacion
-    await update(id, personaje2)
+    await update(id, peliculaSerie2)
     const PeliculaSerie1 = await getByID(id);
 
     return res.status(200).json(PeliculaSerie1)

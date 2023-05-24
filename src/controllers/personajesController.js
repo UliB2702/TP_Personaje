@@ -7,10 +7,12 @@ const controller = Router()
 controller.get('/auth/login', async (req, res) => {
 
 });
+//Cuando funcione el otro, borrar este
+/*
 controller.get('', Authenticate, async (req, res) => {
     const personajes = await getAll();
     return res.status(200).json(personajes);
-});
+});*/
 
 controller.get('', Authenticate, async (req, res) => {
     const name = req.query.name
