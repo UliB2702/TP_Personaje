@@ -1,19 +1,13 @@
 import PeliculaSerie from "../models/PeliculaSerie.js";
 import { Router } from 'express';
 import { Authenticate } from '../common/jwt.strategy.js';
-import { getByParams, getByID, getAll, create, deleteByID, update } from '../services/peliculaSerieService.js';
+import { getByParams, getByID, create, deleteByID, update } from '../services/peliculaSerieService.js';
 
 const controller = Router()
 
 controller.get('/auth/login', async (req, res) => {
     
 });
-//Cuando funcione el otro, borrar este
-/*
-    controller.get('', Authenticate, async (req, res) => {
-    const peliculaSeries = await getAll();
-    return res.status(200).json(peliculaSeries);
-});*/
 
  controller.get('', Authenticate, async (req, res) => {
     const name = req.query.name

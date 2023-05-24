@@ -2,21 +2,27 @@ import PeliculaSerie from "../models/PeliculaSerie.js";
 import sql from 'mssql'
 import configDB from "../models/db.js";
 
-export const getAll = async () => {
-    const conn = await sql.connect(configDB)
-    const results = await conn.request().query('SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie')
-    console.log(results)
-    return results;
-}
 
 export const getByParams = async (nombre, orden) =>{
     const conn = await sql.connect(configDB)
     let results = 0
-    if(orden == undefined)
+    if(nombre)
     {
-        results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%'`)
+        
+        if(orden == "ASC")
+        {
+            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%' ORDER BY FechaCreacion ASC`)
+        }
+        else if(orden == "DESC")
+        {
+            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%' ORDER BY FechaCreacion DESC`)
+        }
+        else
+        {
+            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%'`)
+        }     
     }
-    else if(nombre == undefined)
+    else
     {
         if(orden == "ASC")
         {
@@ -30,27 +36,6 @@ export const getByParams = async (nombre, orden) =>{
             results = await conn.request().query('SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie')
         }
     }
-    else if(nombre != undefined){
-
-        if(orden == "ASC")
-        {
-            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%' ORDER BY FechaCreacion ASC`)
-        }
-        else if(orden == "DESC")
-        {
-            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%' ORDER BY FechaCreacion DESC`)
-        }
-        else
-        {
-            results = await conn.request().input("whereCondition", nombre).query(`SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie WHERE PeliculaSerie.Titulo LIKE '%${nombre}%'`)
-        }        
-
-    }
-    else if(orden != "ASC" && orden != "DESC" && nombre == undefined)
-    {
-        results = await conn.request().query('SELECT Id, Imagen, Titulo, FechaCreacion FROM PeliculaSerie')
-    }
-    
     console.log(results)
     return results;
 }

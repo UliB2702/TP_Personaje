@@ -1,18 +1,12 @@
 import Personaje from "../models/Personaje.js";
 import { Router } from 'express';
 import { Authenticate } from '../common/jwt.strategy.js';
-import { getByParams, getByID, getAll, create, deleteByID, update } from '../services/personajeService.js';
+import { getByParams, getByID, create, deleteByID, update } from '../services/personajeService.js';
 const controller = Router()
 
 controller.get('/auth/login', async (req, res) => {
 
 });
-//Cuando funcione el otro, borrar este
-/*
-controller.get('', Authenticate, async (req, res) => {
-    const personajes = await getAll();
-    return res.status(200).json(personajes);
-});*/
 
 controller.get('', Authenticate, async (req, res) => {
     const name = req.query.name
