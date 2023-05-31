@@ -47,6 +47,14 @@ export const getByID = async (numero) => {
     return results
 }
 
+export const getByIDSinUnion = async (numero) => {
+    const conn = await sql.connect(configDB);
+    console.log(numero)
+    const results = await conn.request().input("whereCondition", numero).query('SELECT * FROM PeliculaSerie WHERE PeliculaSerie.Id = @whereCondition');
+    console.log(results)
+    return results
+}
+
 export const create = async (peliculaSerie) =>{
     const conn = await sql.connect(configDB);
     if(peliculaSerie.calificacion>5)
@@ -73,6 +81,14 @@ export const deleteByID = async(numero) =>{
 
 export const update = async (id, peliculaSerie) =>{
     const conn = await sql.connect(configDB);
+    if(peliculaSerie.calificacion>5)
+    {
+        peliculaSerie.calificacion = 5;
+    }
+    else if(peliculaSerie.calificacion<1)
+    {
+        peliculaSerie.calificacion = 1;
+    }
     await conn.request()
     .input("whereCondition", id)
     .input("pTitulo", peliculaSerie.titulo)

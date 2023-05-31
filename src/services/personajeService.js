@@ -21,7 +21,7 @@ export const getByParams = async (nombre,edad,movie) => {
         else{
             if(movie)
             {
-                results = await conn.request().input("whereCondition", nombre).input("whereCondition2", movie).query(`SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON Personaje.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition2 AND Personaje.Nombre LIKE '%${nombre}%'`)
+                results = await conn.request().input("whereCondition", nombre).input("whereCondition2", movie).query(`SELECT p.Id, p.Imagen, p.Nombre FROM Personaje as p INNER JOIN PersonajeXPeliculaSerie ON p.Id = PersonajeXPeliculaSerie.IdPersonaje INNER JOIN PeliculaSerie ON PersonajeXPeliculaSerie.IdPeliculaSerie = PeliculaSerie.Id WHERE PersonajeXPeliculaSerie.IdPeliculaSerie = @whereCondition2 AND p.Nombre LIKE '%${nombre}%'`)
 
             }
             else{
@@ -61,6 +61,13 @@ export const getByID = async (numero) => {
     return results
 }
 
+export const getByIDSinUnion = async (numero) => {
+    const conn = await sql.connect(configDB);
+    const results = await conn.request().input("whereCondition", numero).query('SELECT * FROM Personaje WHERE Personaje.Id = @whereCondition');
+    console.log(results)
+    return results
+}
+
 export const create = async (personaje) =>{
     const conn = await sql.connect(configDB);
     await conn.request()
@@ -72,9 +79,6 @@ export const create = async (personaje) =>{
     .query('INSERT INTO Personaje (Imagen, Nombre, Edad, Peso, Historia) VALUES (@pImagen, @pNombre, @pEdad, @pPeso, @pHistoria)');
 } 
 
-export const createNexo = async (pid,psid) =>{
-    
-}
 
 export const deleteByID = async(numero) =>{
     const conn = await sql.connect(configDB);

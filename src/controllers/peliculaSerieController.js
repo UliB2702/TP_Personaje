@@ -1,7 +1,7 @@
 import PeliculaSerie from "../models/PeliculaSerie.js";
 import { Router } from 'express';
 import { Authenticate } from '../common/jwt.strategy.js';
-import { getByParams, getByID, create, deleteByID, update } from '../services/peliculaSerieService.js';
+import { getByParams, getByID, create, deleteByID, update, getByIDSinUnion } from '../services/peliculaSerieService.js';
 
 const controller = Router()
 
@@ -25,7 +25,7 @@ controller.get('/:id', Authenticate, async (req, res) => {
     return res.status(200).json(peliculaSerie)
 })
 
-controller.post('/api/', Authenticate, async (req, res)=> {
+controller.post('', Authenticate, async (req, res)=> {
     const peliculaSerie = new PeliculaSerie()
 
     peliculaSerie.imagen = req.body.imagen
@@ -36,25 +36,27 @@ controller.post('/api/', Authenticate, async (req, res)=> {
     return res.status(201).json(peliculaSerie)
 })
 
-controller.delete('/api/', Authenticate, async (req, res) => {
+controller.delete('', Authenticate, async (req, res) => {
     let peliculaSerie2 = new PeliculaSerie()
     const id = req.body.id
-    peliculaSerie2 = await getByID(id);
+    peliculaSerie2 = await getByIDSinUnion(id);
+    console.log(peliculaSerie2)
     await deleteByID(id);
-    return res.status(200).json(PeliculaSerie)
+    return res.status(200).json(peliculaSerie2)
 })
 
-controller.put('/api/', Authenticate, async (req, res) => {
+controller.put('', Authenticate, async (req, res) => {
     const id = req.body.id
+    let peliculaSerie3 = new Personaje()
+    peliculaSerie3 = await getByID(id)
     const peliculaSerie2 = new PeliculaSerie()
     peliculaSerie2.imagen = req.body.imagen
     peliculaSerie2.titulo = req.body.titulo
     peliculaSerie2.fechaCreacion = req.body.fechaCreacion
     peliculaSerie2.calificacion = req.body.calificacion
-    await update(id, peliculaSerie2)
-    const PeliculaSerie1 = await getByID(id);
-
-    return res.status(200).json(PeliculaSerie1)
+    peliculaSerie3 = {...peliculaSerie3, ...peliculaSerie2}
+    await update(id, peliculaSerie3)
+    return res.status(200).json(peliculaSerie3)
 })
 
 

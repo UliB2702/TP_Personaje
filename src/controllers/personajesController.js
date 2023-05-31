@@ -1,7 +1,7 @@
 import Personaje from "../models/Personaje.js";
 import { Router } from 'express';
 import { Authenticate } from '../common/jwt.strategy.js';
-import { getByParams, getByID, create, deleteByID, update } from '../services/personajeService.js';
+import { getByParams, getByID, create, deleteByID, update, getByIDSinUnion } from '../services/personajeService.js';
 const controller = Router()
 
 controller.get('/auth/login', async (req, res) => {
@@ -25,7 +25,7 @@ controller.get('/:id', Authenticate, async (req, res) => {
     return res.status(200).json(personaje)
 })
 
-controller.post('/api/', Authenticate, async (req, res)=> {
+controller.post('', Authenticate, async (req, res)=> {
     const personaje = new Personaje()
 
     personaje.imagen = req.body.imagen
@@ -37,15 +37,16 @@ controller.post('/api/', Authenticate, async (req, res)=> {
     return res.status(201).json(personaje)
 })
 
-controller.delete('/api/', Authenticate, async (req, res) => {
+controller.delete('', Authenticate, async (req, res) => {
     let personaje2 = new Personaje()
     const id = req.body.id
-    personaje2 = await getByID(id)
+    personaje2 = await getByIDSinUnion(id)
+    console.log(personaje2)
     await deleteByID(id);
     return res.status(200).json(personaje2)
 })
 
-controller.put('/api/', Authenticate, async (req, res) => {
+controller.put('', Authenticate, async (req, res) => {
     const id = req.body.id
     let personaje3 = new Personaje()
     personaje3 = await getByID(id)
@@ -57,9 +58,7 @@ controller.put('/api/', Authenticate, async (req, res) => {
     personaje2.historia = req.body.historia
     personaje3 = {...personaje3, ...personaje2}
     await update(id, personaje3)
-    const Personaje1 = await getByID(id);
-
-    return res.status(200).json(Personaje1)
+    return res.status(200).json(personaje3)
 })
 
 export default controller;
