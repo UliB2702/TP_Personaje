@@ -47,7 +47,7 @@ controller.delete('', Authenticate, async (req, res) => {
 
 controller.put('', Authenticate, async (req, res) => {
     const id = req.body.id
-    let peliculaSerie3 = new Personaje()
+    let peliculaSerie3 = new PeliculaSerie()
     peliculaSerie3 = await getByID(id)
     const peliculaSerie2 = new PeliculaSerie()
     peliculaSerie2.imagen = req.body.imagen
