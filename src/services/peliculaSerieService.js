@@ -44,7 +44,9 @@ export const getByParams = async (nombre, orden) =>{
 export const getByID = async (numero) => {
     const conn = await sql.connect(configDB);
     const results = await conn.request().input("whereCondition", numero).query("SELECT ps.Id, ps.Imagen, ps.Titulo, ps.FechaCreacion, ps.Calificacion, STRING_AGG(p.Nombre + ' (Edad: ' + Convert(VARCHAR(MAX),p.Edad) + ' Peso: ' + Convert(VARCHAR(MAX),p.Peso) + ' Imagen: ' + p.Imagen + ' Historia: ' + p.Historia + ')' , ';') AS Personajes FROM PeliculaSerie ps INNER JOIN PersonajeXPeliculaSerie pxp ON ps.Id = pxp.IdPeliculaSerie INNER JOIN Personaje p ON pxp.IdPersonaje = p.Id WHERE ps.Id = @whereCondition GROUP BY ps.Id, ps.Imagen, ps.Titulo, ps.FechaCreacion, ps.Calificacion");
+    if(results.recordset[0] != undefined){
     results.recordset[0].Personajes = results.recordset[0].Personajes.split(';')
+    }
     console.log(results)
     return results
 }

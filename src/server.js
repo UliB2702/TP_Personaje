@@ -13,7 +13,7 @@ app.use(passport.initialize());
 
 app.use(express.json());
 
-const getRandomString = () => {
+export const getRandomString = () => {
     var result = "";
     var characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -25,7 +25,7 @@ const getRandomString = () => {
     return result;
   };
 
-const getSignedToken = () => {
+export const getSignedToken = () => {
     const userId = getRandomString();
     const userMail = `${userId}@personajes.com`;
     const token = jwt.sign(
@@ -45,7 +45,6 @@ const getSignedToken = () => {
     return token;
 };
 
-console.log(getSignedToken());
 
 app.use("/characters", PersonajeRouter)
 app.use("/movies", PeliculaSerieRouter)

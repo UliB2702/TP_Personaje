@@ -1,12 +1,13 @@
 import PeliculaSerie from "../models/PeliculaSerie.js";
 import { Router } from 'express';
 import { Authenticate } from '../common/jwt.strategy.js';
+import { getSignedToken, getRandomString} from '../server.js'
 import { getByParams, getByID, create, deleteByID, update, getByIDSinUnion } from '../services/peliculaSerieService.js';
 
 const controller = Router()
 
 controller.get('/auth/login', async (req, res) => {
-    
+    return res.status(200).json(getSignedToken());
 });
 
  controller.get('', Authenticate, async (req, res) => {
