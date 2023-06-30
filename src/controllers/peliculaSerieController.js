@@ -28,13 +28,18 @@ controller.get('/:id', Authenticate, async (req, res) => {
 
 controller.post('', Authenticate, async (req, res)=> {
     const peliculaSerie = new PeliculaSerie()
-
+    if(req.body.calificacion>5 || req.body.calificacion<1 )
+    {
+    return res.status(400)
+    }
+    else{
     peliculaSerie.imagen = req.body.imagen
     peliculaSerie.titulo = req.body.titulo
     peliculaSerie.fechaCreacion = req.body.fechaCreacion
     peliculaSerie.calificacion = req.body.calificacion
     await create(peliculaSerie)
     return res.status(201).json(peliculaSerie)
+    }
 })
 
 controller.delete('', Authenticate, async (req, res) => {

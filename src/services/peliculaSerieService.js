@@ -61,14 +61,6 @@ export const getByIDSinUnion = async (numero) => {
 
 export const create = async (peliculaSerie) =>{
     const conn = await sql.connect(configDB);
-    if(peliculaSerie.calificacion>5)
-    {
-        peliculaSerie.calificacion = 5;
-    }
-    else if(peliculaSerie.calificacion<1)
-    {
-        peliculaSerie.calificacion = 1;
-    }
     await conn.request()
     .input("pTitulo", peliculaSerie.titulo)
     .input("pImagen", peliculaSerie.imagen)
