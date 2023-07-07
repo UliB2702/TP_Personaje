@@ -5,45 +5,16 @@ import PeliculaSerieRouter from "./controllers/peliculaSerieController.js";
 import 'dotenv/config';
 import passport from "passport";
 import { jwtStrategy } from "./common/jwt.strategy.js";
+import swaggerDoc from '../openapi.json' assert { type: "json" };
+import swaggerUI from "swagger-ui-express"
 
-const path = require("path")
 const app = express();
 const port = 5000;
-const swaggerUI = require("swagger-ui-express")
-const swaggerJsDoc = require("swagger-jsdoc")
-const { swaggerDocs: V1SwaggerDocs } = require("./v1/swagger")
-const swaggerSpec = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "PeliculasPersonajesAPI",
-      version: "1.0.0"
-    },
-    servers: [
-      {
-        url: "http://localhost:5000"
-      }
-    ]
-  },
-  apis: [`${path.join(__dirname, "./controllers/*.js")}`],
-}
-const swaggerDocs = (app, port) => {
-  app.use("/api/v1/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec))
-  app.get("api/v1/docs.json", (req, res) => {
-    res.setHeader("Content-Type", "application/json");
-    res.send(swaggerSpec);
-  });
-}
+
 
 passport.use(jwtStrategy);
 app.use(passport.initialize());
-app.use(
-  "/api-doc", 
-  swaggerUI.serve, 
-  swaggerUI.setup(swaggerJsDoc(swaggerSpec))
-  );
 app.use(express.json());
-app.use("/api/v1/workouts", v1WorkoutRouter)
 
 export const getRandomString = () => {
     var result = "";
@@ -78,13 +49,17 @@ export const getSignedToken = () => {
 };
 
 
-app.use("/characters", PersonajeRouter)
-app.use("/movies", PeliculaSerieRouter)
+app.use("/characters", PersonajeRouter);
+app.use("/movies", PeliculaSerieRouter);
 
-module.exports = { swaggerDocs}
+
+app.use('/api-docs', swaggerUI.serve);
+app.get(
+  '/api-docs',
+   swaggerUI.setup(swaggerDoc)
+);
 
 
 app.listen(port, () => {
     console.log(`Se esta usando el puerto: ${port}`)
-    V1SwaggerDocs(app, port);
 })
