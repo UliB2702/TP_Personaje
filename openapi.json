@@ -3,9 +3,8 @@
   "info": {
     "title": "Swagger Petstore - OpenAPI 3.0",
     "description": "Este es un API de Peliculas/Series y Personajes los cuales estan asociados entre si",
-    "termsOfService": "http://swagger.io/terms/",
     "contact": {
-      "email": "apiteam@swagger.io"
+      "email": "ulibaamonde@gmail.com"
     },
     "license": {
       "name": "Apache 2.0",
@@ -28,7 +27,7 @@
       "description": "Todo acerca de los personajes de la api",
       "externalDocs": {
         "description": "Find out more",
-        "url": "http://localhost"
+        "url": "http://localhost:5000/characters"
       }
     },
     {
@@ -36,7 +35,7 @@
       "description": "Todo acerca de las peliculas de la api",
       "externalDocs": {
         "description": "Find out more about our store",
-        "url": "http://localhost"
+        "url": "http://localhost:5000/movies"
       }
     }
   ],
@@ -55,12 +54,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pet"
+                  "$ref": "#/components/schemas/Token"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pet"
+                  "$ref": "#/components/schemas/Token"
                 }
               }
             }
@@ -73,26 +72,35 @@
         "tags": [
           "characters"
         ],
-        "summary": "Logs user into the system",
-        "description": "",
-        "operationId": "loginUser",
+        "summary": "Busqueda por parametros",
+        "description": "Mediante este endpoint, podes conseguir el ID, Nombre y Imagen de un personaje de la Api con los siguientes parametros",
+        "operationId": "getByParams",
         "parameters": [
           {
-            "name": "username",
+            "name": "name",
             "in": "query",
-            "description": "The user name for login",
+            "description": "El nombre del personaje",
             "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "password",
+            "name": "age",
             "in": "query",
-            "description": "The password for login in clear text",
+            "description": "La edad del personaje",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "integer"
+            }
+          },
+          {
+            "name": "idMovie",
+            "in": "query",
+            "description": "El edad de la pelicula relacionada al personaje",
+            "required": false,
+            "schema": {
+              "type": "integer"
             }
           }
         ],
@@ -137,56 +145,17 @@
             }
           ]
         }
-      }
-    },
-    "/characters/{username}": {
-      "get": {
+      },
+      "post": {
         "tags": [
           "characters"
         ],
-        "summary": "Get user by user name",
+        "summary": "Creacion de Personajes",
         "description": "",
-        "operationId": "getUserByName",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be fetched. Use user1 for testing. ",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
-          },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ]
-        }
-      },
+        "operationId": "createCharacters"
+      }
+    },
+    "/characters/{username}": {
       "put": {
         "tags": [
           "characters"
@@ -210,17 +179,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/Personaje"
               }
             },
             "application/xml": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/Personaje"
               }
             },
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/Personaje"
               }
             }
           }
@@ -478,6 +447,12 @@
       }
     },
     "schemas": {
+      "Token": {
+        "type": "string",
+        "xml": {
+          "name": "Token"
+        }
+      },
       "PeliculaSerie": {
         "type": "object",
         "properties": {
@@ -551,17 +526,62 @@
       }
     },
     "requestBodies": {
-      "Pet": {
+      "Token": {
         "description": "Pet object that needs to be added to the store",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Pet"
+              "$ref": "#/components/schemas/Token"
             }
           },
           "application/xml": {
             "schema": {
-              "$ref": "#/components/schemas/Pet"
+              "$ref": "#/components/schemas/Token"
+            }
+          }
+        }
+      },
+      "Personaje": {
+        "description": "Pet object that needs to be added to the store",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Personaje"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/Personaje"
+            }
+          }
+        }
+      },
+      "PeliculaSerie": {
+        "description": "Pet object that needs to be added to the store",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PeliculaSerie"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/PeliculaSerie"
+            }
+          }
+        }
+      },
+      "PersonajeXPelicula": {
+        "description": "Pet object that needs to be added to the store",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PersonajeXPelicula"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/PersonajeXPelicula"
             }
           }
         }
