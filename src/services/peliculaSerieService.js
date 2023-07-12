@@ -38,7 +38,7 @@ export const getByParams = async (nombre, orden) =>{
         }
     }
     console.log(results)
-    return results;
+    return results.recordset[0];
 }
 
 export const getByID = async (numero) => {
@@ -48,7 +48,7 @@ export const getByID = async (numero) => {
     results.recordset[0].Personajes = results.recordset[0].Personajes.split(';')
     }
     console.log(results)
-    return results
+    return results.recordset[0]
 }
 
 export const getByIDSinUnion = async (numero) => {
@@ -56,7 +56,7 @@ export const getByIDSinUnion = async (numero) => {
     console.log(numero)
     const results = await conn.request().input("whereCondition", numero).query('SELECT * FROM PeliculaSerie WHERE PeliculaSerie.Id = @whereCondition');
     console.log(results)
-    return results
+    return results.recordset[0]
 }
 
 export const create = async (peliculaSerie) =>{

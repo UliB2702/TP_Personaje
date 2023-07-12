@@ -50,7 +50,7 @@
         "operationId": "getToken",
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Token Conseguido",
             "content": {
               "application/json": {
                 "schema": {
@@ -106,7 +106,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Personaje/s encontrado/s",
             "headers": {
               "X-Rate-Limit": {
                 "description": "calls per hour allowed by the user",
@@ -136,11 +136,11 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid username/password supplied"
-          },
           "401": {
             "description": "No autorizado"
+          },
+          "404": {
+            "description": "No se encontro ningun Personaje"
           }
         },
         "security": [
@@ -266,6 +266,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Ingreso de datos incorrecto"
           }
         },
         "security": [
@@ -285,9 +288,6 @@
           "200": {
             "description": "Personaje borrado"
           },
-          "400": {
-            "description": "Id invalido"
-          },
           "404": {
             "description": "Personaje no encontrado"
           }
@@ -305,7 +305,7 @@
           "characters"
         ],
         "summary": "Busqueda por ID",
-        "description": "C",
+        "description": "Con este endpoint podes buscar toda la informacion de un personaje usando su Id",
         "operationId": "getByID",
         "parameters": [
           {
@@ -314,7 +314,7 @@
             "description": "Id usado para buscarlo",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -324,6 +324,9 @@
           },
           "400": {
             "description": "Id invalido"
+          },
+          "404": {
+            "description": "Ningun Personaje encontrado"
           }
         },
         "security": [
@@ -476,10 +479,10 @@
           "movies"
         ],
         "summary": "Actualizar Pelicula/Serie",
-        "description": "This can only be done by the logged in user.",
+        "description": "Con este endpoint se puede actualizar los datos de una pelicula/serie ya existente en la base de datos",
         "operationId": "updateMovie",
         "requestBody": {
-          "description": "Update an existent user in the store",
+          "description": "Ingrese los datos necesarios para hacer el remplazo",
           "content": {
             "application/json": {
               "schema": {
@@ -499,8 +502,8 @@
           }
         },
         "responses": {
-          "400": {
-            "description": "successful operation"
+          "200": {
+            "description": "Remplazo realizado"
           }
         },
         "security": [
@@ -514,14 +517,11 @@
           "movies"
         ],
         "summary": "Borrar Pelicula/Serie",
-        "description": "This can only be done by the logged in user.",
+        "description": "Con este endpoint podes borrar una pelicula/serie usando su ID",
         "operationId": "deleteMovie",
         "responses": {
           "200": {
             "description": "Pelicula/Serie borrado"
-          },
-          "400": {
-            "description": "Id invalido"
           },
           "404": {
             "description": "Pelicula/Serie no encontrada"
@@ -540,7 +540,7 @@
           "movies"
         ],
         "summary": "Busqueda por ID",
-        "description": "",
+        "description": "Con este endpoint podes buscar toda la informacion de una pelicula/serie usando su Id",
         "operationId": "getMovieById",
         "parameters": [
           {
