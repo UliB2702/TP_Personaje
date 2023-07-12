@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Swagger Petstore - OpenAPI 3.0",
+    "title": "APi de Personajes y Pelicualas/Serie 3.0",
     "description": "Este es un API de Peliculas/Series y Personajes los cuales estan asociados entre si",
     "contact": {
       "email": "ulibaamonde@gmail.com"
@@ -276,27 +276,6 @@
             "bearerAuth": []
           }
         ]
-      },
-      "delete": {
-        "tags": [
-          "characters"
-        ],
-        "summary": "Borrar Personaje",
-        "description": "Con este endpoint podes borrar un personaje usando su ID",
-        "operationId": "deleteByID",
-        "responses": {
-          "200": {
-            "description": "Personaje borrado"
-          },
-          "404": {
-            "description": "Personaje no encontrado"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
       }
     },
     "/characters/{id}": {
@@ -327,6 +306,38 @@
           },
           "404": {
             "description": "Ningun Personaje encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Borrar Personaje",
+        "description": "Con este endpoint podes borrar un personaje usando su ID",
+        "operationId": "deleteByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id usado para buscarlo",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personaje borrado"
+          },
+          "404": {
+            "description": "Personaje no encontrado"
           }
         },
         "security": [
@@ -511,27 +522,6 @@
             "bearerAuth": []
           }
         ]
-      },
-      "delete": {
-        "tags": [
-          "movies"
-        ],
-        "summary": "Borrar Pelicula/Serie",
-        "description": "Con este endpoint podes borrar una pelicula/serie usando su ID",
-        "operationId": "deleteMovie",
-        "responses": {
-          "200": {
-            "description": "Pelicula/Serie borrado"
-          },
-          "404": {
-            "description": "Pelicula/Serie no encontrada"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
       }
     },
     "/movies/{id}": {
@@ -581,6 +571,38 @@
             "bearerAuth": []
           }
         ]
+      },
+      "delete": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Borrar Pelicula/Serie",
+        "description": "Con este endpoint podes borrar una pelicula/serie usando su ID",
+        "operationId": "deleteMovie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id necesario para buscar la pelicula/serie ",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pelicula/Serie borrado"
+          },
+          "404": {
+            "description": "Pelicula/Serie no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -619,7 +641,7 @@
           },
           "FechaCreacion": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "Calificacion": {
             "type": "number",

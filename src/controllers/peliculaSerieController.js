@@ -42,9 +42,9 @@ controller.post('', Authenticate, async (req, res)=> {
     }
 })
 
-controller.delete('', Authenticate, async (req, res) => {
+controller.delete('/:id', Authenticate, async (req, res) => {
     let peliculaSerie2 = new PeliculaSerie()
-    const id = req.body.id
+    const id = req.params.id
     peliculaSerie2 = await getByIDSinUnion(id);
     console.log(peliculaSerie2)
     await deleteByID(id);

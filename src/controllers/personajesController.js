@@ -38,9 +38,9 @@ controller.post('', Authenticate, async (req, res)=> {
     return res.status(201).json(personaje)
 })
 
-controller.delete('', Authenticate, async (req, res) => {
+controller.delete('/:id', Authenticate, async (req, res) => {
     let personaje2 = new Personaje()
-    const id = req.body.id
+    const id = req.params.id
     personaje2 = await getByIDSinUnion(id)
     console.log(personaje2)
     await deleteByID(id);
