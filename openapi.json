@@ -18,7 +18,7 @@
   },
   "servers": [
     {
-      "url": "https://petstore3.swagger.io/api/v3"
+      "url": "http://localhost:5000"
     }
   ],
   "tags": [
@@ -95,7 +95,7 @@
             }
           },
           {
-            "name": "idMovie",
+            "name": "movie",
             "in": "query",
             "description": "El edad de la pelicula relacionada al personaje",
             "required": false,
@@ -139,43 +139,26 @@
           "400": {
             "description": "Invalid username/password supplied"
           },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ]
-        }
+          "401": {
+            "description": "No autorizado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
           "characters"
         ],
         "summary": "Creacion de Personajes",
-        "description": "",
-        "operationId": "createCharacters"
-      }
-    },
-    "/characters/{username}": {
-      "put": {
-        "tags": [
-          "characters"
-        ],
-        "summary": "Update user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "name that need to be deleted",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "description": "Con este endpoint podes crear personajes para agregar a la Base de Datos",
+        "operationId": "createCharacters",
         "requestBody": {
-          "description": "Update an existent user in the store",
+          "description": "Ingrese todos los necesario para crear el personaje",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -191,32 +174,144 @@
               "schema": {
                 "$ref": "#/components/schemas/Personaje"
               }
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
             }
           }
         },
         "responses": {
-          "400": {
-            "description": "successful operation"
-          },
-          "security": [
-            {
-              "bearerAuth": []
+          "201": {
+            "description": "Creado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Personaje"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Personaje"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
-          ]
-        }
+          },
+          "400": {
+            "description": "Ingreso de datos incorrecto"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Actualizar Personaje",
+        "description": "Con este endpoint se puede actualizar los datos de un personaje ya existente en la base de datos",
+        "operationId": "updateCharacter",
+        "requestBody": {
+          "description": "Ingrese los datos necesarios para hacer el remplazo",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Personaje"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/Personaje"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Personaje"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Personaje Actualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Personaje"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Personaje"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "characters"
         ],
-        "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
+        "summary": "Borrar Personaje",
+        "description": "Con este endpoint podes borrar un personaje usando su ID",
+        "operationId": "deleteByID",
+        "responses": {
+          "200": {
+            "description": "Personaje borrado"
+          },
+          "400": {
+            "description": "Id invalido"
+          },
+          "404": {
+            "description": "Personaje no encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/characters/{id}": {
+      "get": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Busqueda por ID",
+        "description": "C",
+        "operationId": "getByID",
         "parameters": [
           {
-            "name": "username",
+            "name": "id",
             "in": "path",
-            "description": "The name that needs to be deleted",
+            "description": "Id usado para buscarlo",
             "required": true,
             "schema": {
               "type": "string"
@@ -224,18 +319,18 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Personaje encontrado"
+          },
           "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
-          },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ]
-        }
+            "description": "Id invalido"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/movies": {
@@ -243,32 +338,36 @@
         "tags": [
           "movies"
         ],
-        "summary": "Logs user into the system",
-        "description": "",
-        "operationId": "loginUser",
+        "summary": "Buscada por parametros",
+        "description": "Este endpoint te permite buscar personajes mediante el nombre y luego te permite ordenarlos segun su fecha de creacion",
+        "operationId": "getMoviesByParams",
         "parameters": [
           {
-            "name": "username",
+            "name": "name",
             "in": "query",
-            "description": "The user name for login",
+            "description": "El nombre de la pelicula",
             "required": false,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "password",
+            "name": "order",
             "in": "query",
-            "description": "The password for login in clear text",
+            "description": "El orden en que te gustaria ver las peliculas (ASC/DESC) en base a la fecha de creacion",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Pelicula/s encontradas",
             "headers": {
               "X-Rate-Limit": {
                 "description": "calls per hour allowed by the user",
@@ -298,99 +397,103 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid username/password supplied"
-          },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ]
-        }
-      }
-    },
-    "/movies/{id}": {
-      "get": {
+          "404": {
+            "description": "Pelicula no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
         "tags": [
           "movies"
         ],
-        "summary": "Get user by user name",
-        "description": "",
-        "operationId": "getUserByName",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be fetched. Use user1 for testing. ",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "summary": "Creacion de peliculas/series",
+        "description": "Con este endpoint podes crear peliculas/series para agregar a la Base de Datos",
+        "operationId": "createMovies",
+        "requestBody": {
+          "description": "Ingrese todos los necesario para crear la pelicula/serie",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeliculaSerie"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/PeliculaSerie"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PeliculaSerie"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "200": {
-            "description": "successful operation",
+          "201": {
+            "description": "Creado",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/PeliculaSerie"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/PeliculaSerie"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
-          },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ]
-        }
+            "description": "Ingreso de datos incorrecto"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "put": {
         "tags": [
           "movies"
         ],
-        "summary": "Update user",
+        "summary": "Actualizar Pelicula/Serie",
         "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "name that need to be deleted",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "updateMovie",
         "requestBody": {
           "description": "Update an existent user in the store",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/PeliculaSerie"
               }
             },
             "application/xml": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/PeliculaSerie"
               }
             },
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/PeliculaSerie"
               }
             }
           }
@@ -398,49 +501,97 @@
         "responses": {
           "400": {
             "description": "successful operation"
-          },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ]
-        }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "movies"
         ],
-        "summary": "Delete user",
+        "summary": "Borrar Pelicula/Serie",
         "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
+        "operationId": "deleteMovie",
+        "responses": {
+          "200": {
+            "description": "Pelicula/Serie borrado"
+          },
+          "400": {
+            "description": "Id invalido"
+          },
+          "404": {
+            "description": "Pelicula/Serie no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "summary": "Busqueda por ID",
+        "description": "",
+        "operationId": "getMovieById",
         "parameters": [
           {
-            "name": "username",
+            "name": "id",
             "in": "path",
-            "description": "The name that needs to be deleted",
+            "description": "Id necesario para buscar la pelicula/serie ",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
         "responses": {
+          "200": {
+            "description": "Pelicula/Serie encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeliculaSerie"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeliculaSerie"
+                }
+              }
+            }
+          },
           "400": {
-            "description": "Invalid username supplied"
+            "description": "Id invalido"
           },
           "404": {
-            "description": "User not found"
-          },
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ]
-        }
+            "description": "Pelicula/Serie no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "responses": {
       "UnauthorizedError": {
         "description": "Access token is missing or invalid"
@@ -593,30 +744,11 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/Personaje"
               }
             }
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "petstore_auth": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
-            "scopes": {
-              "write:pets": "modify pets in your account",
-              "read:pets": "read your pets"
-            }
-          }
-        }
-      },
-      "api_key": {
-        "type": "apiKey",
-        "name": "api_key",
-        "in": "header"
       }
     }
   }
