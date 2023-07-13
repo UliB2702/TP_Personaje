@@ -20,7 +20,7 @@ Si quieres que corra en otro puerto tienes que:
 - Si, cuando hiciste estos cambios, el proyecto ya estaba corriendo, cerrarlo y volverlo a correr
 Una vez el proyecto este corriendo donde tu desees, en el navegador, tienes utilizar [este link](http://localhost:5000/api-docs) para abrir Swagger con los diferentes endpoints
 
-#### 4 Conseguir Token
+#### 4 Conseguir Token 🔐
 Si seguiste lo pasos correctamente, deberías aparecer en la pantalla de Swagger con todos los endpoints o rutas que podes utilizar para interactuar con la base de datos.
 Aunque... **ATENCION!**, aunque, posiblemente te gustaría probarlo de inmediato, si intentas hacer, casi todos no te lo permitirán con lo siguiente `{"message": "Unauthorized"}`. Esto se debe a que necesitas el token para poder utilizar la mayor parte del Swagger. Para obtener este token, tienes que utilizar la ruta `/characters/auth/login` la cual no tienes que estar autorizado para utilizarla y, luego que la pruebes, te va a otorgar el token. Nada más hace falta ponerlo en una casilla llamada **Authorize** que se encuentra arriba del todo y, con eso, podrás utilizar, finalmente, el resto de endpoints
  
