@@ -353,7 +353,7 @@
           "movies"
         ],
         "summary": "Buscada por parametros",
-        "description": "Este endpoint te permite buscar personajes mediante el nombre y luego te permite ordenarlos segun su fecha de creacion",
+        "description": "Este endpoint te permite buscar el ID, Nombre y Imagen de una pelicula/serie mediante su nombre y luego te permite ordenarlos segun su fecha de creacion",
         "operationId": "getMoviesByParams",
         "parameters": [
           {
