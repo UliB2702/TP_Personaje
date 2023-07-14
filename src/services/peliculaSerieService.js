@@ -38,15 +38,28 @@ export const getByParams = async (nombre, orden) =>{
         }
     }
     console.log(results)
-    return results.recordset[0];
+    return results.recordset;
 }
 
 export const getByID = async (numero) => {
     const conn = await sql.connect(configDB);
-    const results = await conn.request().input("whereCondition", numero).query("SELECT ps.Id, ps.Imagen, ps.Titulo, ps.FechaCreacion, ps.Calificacion, STRING_AGG(p.Nombre + ' (Edad: ' + Convert(VARCHAR(MAX),p.Edad) + ' Peso: ' + Convert(VARCHAR(MAX),p.Peso) + ' Imagen: ' + p.Imagen + ' Historia: ' + p.Historia + ')' , ';') AS Personajes FROM PeliculaSerie ps INNER JOIN PersonajeXPeliculaSerie pxp ON ps.Id = pxp.IdPeliculaSerie INNER JOIN Personaje p ON pxp.IdPersonaje = p.Id WHERE ps.Id = @whereCondition GROUP BY ps.Id, ps.Imagen, ps.Titulo, ps.FechaCreacion, ps.Calificacion");
+    const results = await conn.request().input("whereCondition", numero).query("SELECT ps.Id, ps.Imagen, ps.Titulo, ps.FechaCreacion, ps.Calificacion, STRING_AGG(p.Nombre + ',' + Convert(VARCHAR(MAX),p.Edad) + ',' + Convert(VARCHAR(MAX),p.Peso) + ',' + p.Imagen + ',' + p.Historia , ';') AS Personajes FROM PeliculaSerie ps INNER JOIN PersonajeXPeliculaSerie pxp ON ps.Id = pxp.IdPeliculaSerie INNER JOIN Personaje p ON pxp.IdPersonaje = p.Id WHERE ps.Id = @whereCondition GROUP BY ps.Id, ps.Imagen, ps.Titulo, ps.FechaCreacion, ps.Calificacion");
     if(results.recordset[0] != undefined){
     results.recordset[0].Personajes = results.recordset[0].Personajes.split(';')
     }
+    let personajes = results.recordset[0].Personajes
+    let PersonajesSeparados = []
+    personajes.forEach(personaje => {
+        let valores = personaje.split(',')
+        let p = new Personaje()
+        p.Nombre = valores[0]
+        p.Edad = valores[1]
+        p.Peso = valores[2]
+        p.Imagen = valores[3]
+        p.Historia = valores[4]
+        PersonajesSeparados.push(p)
+    }); 
+    results.recordset[0].Personajes = PersonajesSeparados
     console.log(results)
     return results.recordset[0]
 }

@@ -107,22 +107,6 @@
         "responses": {
           "200": {
             "description": "Personaje/s encontrado/s",
-            "headers": {
-              "X-Rate-Limit": {
-                "description": "calls per hour allowed by the user",
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              },
-              "X-Expires-After": {
-                "description": "date in UTC when token expires",
-                "schema": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
-            },
             "content": {
               "application/xml": {
                 "schema": {
@@ -157,7 +141,7 @@
         "description": "Con este endpoint podes crear personajes para agregar a la Base de Datos",
         "operationId": "createCharacters",
         "requestBody": {
-          "description": "Ingrese todos los necesario para crear el personaje",
+          "description": "Ingrese todos los necesario para crear el personaje. (El Id no es necesario porque se genera automaticamente)",
           "required": true,
           "content": {
             "application/json": {
@@ -218,10 +202,10 @@
           "characters"
         ],
         "summary": "Actualizar Personaje",
-        "description": "Con este endpoint se puede actualizar los datos de un personaje ya existente en la base de datos",
+        "description": "Con este endpoint se puede actualizar los datos de un personaje ya existente en la base de datos. Necesitaras indicar, primero, el ID del personaje que quieras remplazar y, luego, que nuevos valores les quieres dar",
         "operationId": "updateCharacter",
         "requestBody": {
-          "description": "Ingrese los datos necesarios para hacer el remplazo",
+          "description": "Ingrese los datos necesarios para hacer el remplazo.",
           "required": true,
           "content": {
             "application/json": {
@@ -382,22 +366,6 @@
         "responses": {
           "200": {
             "description": "Pelicula/s encontradas",
-            "headers": {
-              "X-Rate-Limit": {
-                "description": "calls per hour allowed by the user",
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              },
-              "X-Expires-After": {
-                "description": "date in UTC when token expires",
-                "schema": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
-            },
             "content": {
               "application/xml": {
                 "schema": {
@@ -429,7 +397,7 @@
         "description": "Con este endpoint podes crear peliculas/series para agregar a la Base de Datos",
         "operationId": "createMovies",
         "requestBody": {
-          "description": "Ingrese todos los necesario para crear la pelicula/serie",
+          "description": "Ingrese todos los necesario para crear la pelicula/serie. (El Id no es necesario porque se genera automaticamente)",
           "required": true,
           "content": {
             "application/json": {
@@ -490,10 +458,10 @@
           "movies"
         ],
         "summary": "Actualizar Pelicula/Serie",
-        "description": "Con este endpoint se puede actualizar los datos de una pelicula/serie ya existente en la base de datos",
+        "description": "Con este endpoint se puede actualizar los datos de una pelicula/serie ya existente en la base de datos. Necesitaras indicar, primero, el ID de la pelicula que quieras remplazar y, luego, que nuevos valores les quieres dar",
         "operationId": "updateMovie",
         "requestBody": {
-          "description": "Ingrese los datos necesarios para hacer el remplazo",
+          "description": "Ingrese los datos necesarios para hacer el remplazo.",
           "content": {
             "application/json": {
               "schema": {
@@ -629,21 +597,21 @@
       "PeliculaSerie": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "integer",
             "format": "int64"
           },
-          "Imagen": {
+          "imagen": {
             "type": "string"
           },
-          "Titulo": {
+          "titulo": {
             "type": "string"
           },
-          "FechaCreacion": {
+          "fechaCreacion": {
             "type": "string",
             "format": "date"
           },
-          "Calificacion": {
+          "calificacion": {
             "type": "number",
             "format": "float"
           }
@@ -655,25 +623,25 @@
       "Personaje": {
         "type": "object",
         "properties": {
-          "Id": {
+          "id": {
             "type": "integer",
             "format": "int64"
           },
-          "Imagen": {
+          "imagen": {
             "type": "string"
           },
-          "Nombre": {
+          "nombre": {
             "type": "string"
           },
-          "Edad": {
+          "edad": {
             "type": "integer",
             "format": "int64"
           },
-          "Peso": {
+          "peso": {
             "type": "integer",
             "format": "int64"
           },
-          "Historia": {
+          "historia": {
             "type": "string"
           }
         },

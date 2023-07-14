@@ -1,6 +1,7 @@
 import Personaje from "../models/Personaje.js";
 import sql from 'mssql'
 import configDB from "../models/db.js";
+import PeliculaSerie from "../models/PeliculaSerie.js"
 
 
 export const getByParams = async (nombre,edad,movie) => {
@@ -51,15 +52,27 @@ export const getByParams = async (nombre,edad,movie) => {
     }
 
     console.log(results)
-    return results.recordset[0];
+    return results.recordset;
 }
 
 export const getByID = async (numero) => {
     const conn = await sql.connect(configDB);
-    const results = await conn.request().input("whereCondition", numero).query("SELECT p.Id, p.Imagen, p.Nombre, p.Edad, p.Peso , p.Historia, STRING_AGG(ps.Titulo + ' (Poster: ' + ps.Imagen + ' Fecha de estreno: ' + Convert(VARCHAR(MAX),ps.FechaCreacion) + ' Calificacion: ' + Convert(VARCHAR(MAX),ps.Calificacion) + ')' , ';') as Peliculas FROM Personaje AS p INNER JOIN PersonajeXPeliculaSerie as pxs ON p.Id = pxs.IdPersonaje INNER JOIN PeliculaSerie AS ps ON pxs.IdPeliculaSerie = ps.Id WHERE p.Id = @whereCondition GROUP BY p.Id, p.Imagen, p.Nombre, p.Edad, p.Peso , p.Historia");
+    const results = await conn.request().input("whereCondition", numero).query("SELECT p.Id, p.Imagen, p.Nombre, p.Edad, p.Peso , p.Historia, STRING_AGG(ps.Titulo + ',' + ps.Imagen  + ',' + Convert(VARCHAR(MAX),ps.FechaCreacion)  + ',' + Convert(VARCHAR(MAX),ps.Calificacion) , ';') as Peliculas FROM Personaje AS p INNER JOIN PersonajeXPeliculaSerie as pxs ON p.Id = pxs.IdPersonaje INNER JOIN PeliculaSerie AS ps ON pxs.IdPeliculaSerie = ps.Id WHERE p.Id = @whereCondition GROUP BY p.Id, p.Imagen, p.Nombre, p.Edad, p.Peso , p.Historia");
     if(results.recordset[0] != undefined){
         results.recordset[0].Peliculas = results.recordset[0].Peliculas.split(';')
     }
+    let PeliculasSeries = results.recordset[0]?.Peliculas ?? []
+    let PeliculasSeparadas = []
+    PeliculasSeries.forEach(pelicula => {
+        let valores = pelicula.split(',')
+        let serie = new PeliculaSerie()
+        serie.Titulo = valores[0]
+        serie.Imagen = valores[1]
+        serie.FechaCreacion = valores[2]
+        serie.Calificacion = valores[3]
+        PeliculasSeparadas.push(serie)
+    });
+    results.recordset[0].Peliculas = PeliculasSeparadas
     console.log(results)
     return results.recordset[0]
 }
